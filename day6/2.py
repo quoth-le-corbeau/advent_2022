@@ -3,15 +3,22 @@ import os
 import helpers
 
 
-def RENAME_FUNC(file_path: os.path):
-    RENAME = _RENAME_FUNC(file=file_path)
-    pass
+def count_characters_until_marker_detected(file_path: os.path) -> int:
+    data_stream = _get_data_stream(file=file_path)
+    count = 0
+    for i in range(14, len(data_stream), 1):
+        last_four_characters = ""
+        for x in range(-14, 0):
+            last_four_characters += data_stream[i + x]
+        if len(set(last_four_characters)) == 14:
+            count = i
+            break
+    return count
 
 
-def _RENAME_FUNC(file: os.path):
+def _get_data_stream(file: os.path) -> str:
     with open(file) as puzzle_input:
-        lines = puzzle_input.read()
-        print(lines)
+        return puzzle_input.read()
 
 
-helpers.print_timed_results(solution_func=RENAME_FUNC)
+helpers.print_timed_results(solution_func=count_characters_until_marker_detected)
