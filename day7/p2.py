@@ -54,8 +54,8 @@ def size(folder) -> int:
 print(size(folder=root))
 
 
-
 t = size(root) - 40_000_000
+
 
 def solve(dir):
     ans = float("inf")
