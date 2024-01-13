@@ -28,7 +28,7 @@ TARGET_SIZE = 100000
 def sum_largest_directories(file_path: os.path):
     file_structure = _get_structure(file=file_path)
     print(file_structure)
-    for key, value in GOAL["/"].items():
+    for key, value in file_structure["/"].items():
         if isinstance(value, int):
             continue
         elif isinstance(value, dict):
@@ -54,25 +54,33 @@ def _recursive_sum(directory):
 def _get_structure(file: os.path):
     with open(file) as puzzle_input:
         lines = puzzle_input.read().splitlines()
-        current_directory = "/"
-        structure = {"/": {}}
-        lines = lines[1:]
-        for i, line in enumerate(lines):
-            previous_directory = current_directory
-            if line == "$ ls":
+        current_directory = dict()
+        stack = list()
+        for line in lines:
+            if line.split()[-1] == "ls":
                 continue
-            elif line == "$ cd ..":
-                current_directory = previous_directory
-                continue
-            elif line.split()[0] == "dir":
-                new_directory = line.split()[1]
-                structure[current_directory][new_directory] = {}
-            elif line.split()[1] == "cd" and line.split()[2] != "..":
-                directory = line.split()[2]
-                
+            elif line.split()[1] == "cd":
+                directory_name = line.split()[-1]
+                if directory_name == "/":
+                    current_directory = dict()
+                    stack = list()
+                elif directory_name == "..":
+                    current_directory = stack.pop()
+                else:
+                    if directory_name not in current_directory:
+                        current_directory[directory_name] = dict()
+                    stack.append(current_directory)
+                    current_directory = current_directory[directory_name]
+            else:
+                size_or_dir, name = line.split()
+                if size_or_dir == "dir":
+                    current_directory[name] = dict()
+                else:
+                    current_directory[name] = int(size_or_dir)
+
+        return {"/": stack[0]}
 
 
-        return structure
 
 
 helpers.print_timed_results(solution_func=sum_largest_directories)
