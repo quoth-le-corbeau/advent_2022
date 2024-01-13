@@ -1,27 +1,32 @@
 import os
-
 import helpers
 
 TARGET_DIRECTORY_SIZE = 100000
 TARGET_DIRECTORIES = list()
 
 
-def sum_targed_directories(file_path: os.path):
+def sum_target_directories(file_path: os.path) -> int:
     file_structure = _build_nested_file_structure(file=file_path)
-    for key, value in file_structure.items():
+    root_dir_size = 0
+    for _, value in file_structure.items():
         if isinstance(value, int):
-            continue
+            root_dir_size += value
         else:
             # assume values can only be integers or dictionaries
-            size_of_next_inner_directory = _recursive_sum_of_nested_dicts(nested_dict=value)
+            size_of_next_inner_directory = _recursive_sum_of_nested_dicts(
+                nested_dict=value
+            )
+            root_dir_size += size_of_next_inner_directory
             if size_of_next_inner_directory <= TARGET_DIRECTORY_SIZE:
                 TARGET_DIRECTORIES.append(size_of_next_inner_directory)
+    if root_dir_size <= TARGET_DIRECTORY_SIZE:
+        TARGET_DIRECTORIES.append(root_dir_size)
     return sum(TARGET_DIRECTORIES)
 
 
 def _recursive_sum_of_nested_dicts(nested_dict) -> int:
     sum_of_integers_in_outer_dict = 0
-    for key, value in nested_dict.items():
+    for _, value in nested_dict.items():
         if isinstance(value, int):
             sum_of_integers_in_outer_dict += value
         else:
@@ -64,5 +69,5 @@ def _build_nested_file_structure(file: os.path):
 
 
 helpers.print_timed_results(
-    solution_func=sum_targed_directories, test_path_extension=None
+    solution_func=sum_target_directories, test_path_extension=None
 )
