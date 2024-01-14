@@ -15,36 +15,40 @@ def find_highest_scenic_score(grid: list[list[int]]) -> int:
             if y == 0 or x == 0 or y == len(grid) - 1 or x == len(row) - 1:
                 continue
             else:
-                left_count = 0
-                right_count = 0
-                up_count = 0
-                down_count = 0
+                left = 0
+                right = 0
+                up = 0
+                down = 0
                 # look left
                 i = 1
                 while x - i >= 0 and row[x - i] < tree:
-                    left_count += 1
+                    left += 1
                     i += 1
+                if x - i >= 0:
+                    left += 1
                 # look right
-                k = 1
-                while x + k < len(row) and row[x + k] < tree:
-                    right_count += 1
-                    k += 1
+                i = 1
+                while x + i < len(row) and row[x + i] < tree:
+                    right += 1
+                    i += 1
+                if x + i <= len(row) - 1:
+                    right += 1
                 # look up
                 j = 1
                 while y - j >= 0 and grid[y - j][x] < tree:
-                    up_count += 1
+                    up += 1
                     j += 1
+                if y - j >= 0:
+                    up += 1
                 # look down
-                l = 1
-                while y + l < len(grid) and grid[y + l][x] < tree:
-                    down_count += 1
-                    l += 1
-                left_count += 1
-                right_count += 1
-                up_count += 1
-                down_count += 1
-                scenic_scores.append(left_count * right_count * up_count * down_count)
-    print(f"{scenic_scores=}")
+                j = 1
+                while y + j < len(grid) and grid[y + j][x] < tree:
+                    down += 1
+                    j += 1
+                if y + j <= len(grid) - 1:
+                    down += 1
+                scenic_score = left * right * up * down
+                scenic_scores.append(scenic_score)
     return max(scenic_scores)
 
 
