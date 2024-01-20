@@ -1,5 +1,7 @@
 import math
 import os
+from typing import Self
+
 import helpers
 
 
@@ -55,47 +57,47 @@ class Tail(Head):
             else:
                 self.y = head.y - 1
 
-    def follow_tail(self, head: Head):
+    def follow_tail(self, tail: Self):
         is_diagonal_move = (
-            abs(self.y - head.y) == 2 and abs(self.x - head.x) == 1
-        ) or (abs(self.y - head.y) == 1 and abs(self.x - head.x)) == 2
-        is_long_diagonal_move = abs(self.x - head.y) == 2 and abs(self.y - head.y) == 2
+            abs(self.y - tail.y) == 2 and abs(self.x - tail.x) == 1
+        ) or (abs(self.y - tail.y) == 1 and abs(self.x - tail.x)) == 2
+        is_long_diagonal_move = abs(self.x - tail.y) == 2 and abs(self.y - tail.y) == 2
         if is_long_diagonal_move:
-            if self.y < head.y:
-                if self.x < head.x:
+            if self.y < tail.y:
+                if self.x < tail.x:
                     self.x += 1
                     self.y += 1
                 else:
                     self.x -= 1
                     self.y += 1
             else:
-                if self.x < head.x:
+                if self.x < tail.x:
                     self.x += 1
                     self.y -= 1
                 else:
                     self.x -= 1
                     self.y -= 1
         elif is_diagonal_move:
-            if abs(head.y - self.y) == 1:
-                if head.x - self.x == 2:
-                    self.x, self.y = head.x - 1, head.y
-                elif head.x - self.x == -2:
-                    self.x, self.y = head.x + 1, head.y
-            elif abs(head.x - self.x) == 1:
-                if head.y - self.y == 2:
-                    self.x, self.y = head.x, head.y - 1
-                elif head.y - self.y == -2:
-                    self.x, self.y = head.x, head.y + 1
-        elif self.y == head.y:
-            if self.x > head.x:
-                self.x = head.x + 1
+            if abs(tail.y - self.y) == 1:
+                if tail.x - self.x == 2:
+                    self.x, self.y = tail.x - 1, tail.y
+                elif tail.x - self.x == -2:
+                    self.x, self.y = tail.x + 1, tail.y
+            elif abs(tail.x - self.x) == 1:
+                if tail.y - self.y == 2:
+                    self.x, self.y = tail.x, tail.y - 1
+                elif tail.y - self.y == -2:
+                    self.x, self.y = tail.x, tail.y + 1
+        elif self.y == tail.y:
+            if self.x > tail.x:
+                self.x = tail.x + 1
             else:
-                self.x = head.x - 1
+                self.x = tail.x - 1
         else:
-            if self.y > head.y:
-                self.y = head.y + 1
+            if self.y > tail.y:
+                self.y = tail.y + 1
             else:
-                self.y = head.y - 1
+                self.y = tail.y - 1
 
 
 def count_tail_positions(file_path: os.path) -> int:
