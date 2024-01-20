@@ -59,7 +59,23 @@ class Tail(Head):
         is_diagonal_move = (
             abs(self.y - head.y) == 2 and abs(self.x - head.x) == 1
         ) or (abs(self.y - head.y) == 1 and abs(self.x - head.x)) == 2
-        if is_diagonal_move:
+        is_long_diagonal_move = abs(self.x - head.y) == 2 and abs(self.y - head.y) == 2
+        if is_long_diagonal_move:
+            if self.y < head.y:
+                if self.x < head.x:
+                    self.x += 1
+                    self.y += 1
+                else:
+                    self.x -= 1
+                    self.y += 1
+            else:
+                if self.x < head.x:
+                    self.x += 1
+                    self.y -= 1
+                else:
+                    self.x -= 1
+                    self.y -= 1
+        elif is_diagonal_move:
             if abs(head.y - self.y) == 1:
                 if head.x - self.x == 2:
                     self.x, self.y = head.x - 1, head.y
@@ -103,21 +119,21 @@ def count_tail_positions(file_path: os.path) -> int:
             if tail_1.has_to_move(head):
                 tail_1.follow_head(head)
             if tail_2.has_to_move(tail_1):
-                tail_2.follow_head(tail_1)
+                tail_2.follow_tail(tail_1)
             if tail_3.has_to_move(tail_2):
-                tail_3.follow_head(tail_2)
+                tail_3.follow_tail(tail_2)
             if tail_4.has_to_move(tail_3):
-                tail_4.follow_head(tail_3)
+                tail_4.follow_tail(tail_3)
             if tail_5.has_to_move(tail_4):
-                tail_5.follow_head(tail_4)
+                tail_5.follow_tail(tail_4)
             if tail_6.has_to_move(tail_5):
-                tail_6.follow_head(tail_5)
+                tail_6.follow_tail(tail_5)
             if tail_7.has_to_move(tail_6):
-                tail_7.follow_head(tail_6)
+                tail_7.follow_tail(tail_6)
             if tail_8.has_to_move(tail_7):
-                tail_8.follow_head(tail_7)
+                tail_8.follow_tail(tail_7)
             if tail_9.has_to_move(tail_8):
-                tail_9.follow_head(tail_8)
+                tail_9.follow_tail(tail_8)
                 positions.add((tail_9.x, tail_9.y))
             spaces += 1
     return len(positions)
