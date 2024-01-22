@@ -1,6 +1,9 @@
 import os
+import time
+from pathlib import Path
 
-import helpers
+
+# import helpers
 
 
 def print_pixels_on_screen(file_path: os.path) -> None:
@@ -26,8 +29,8 @@ def print_pixels_on_screen(file_path: os.path) -> None:
     print(row)
 
 
-def _parse_program_file(file: os.path) -> list[tuple[int, int]]:
-    with open(file) as puzzle_input:
+def _parse_program_file(file: str) -> list[tuple[int, int]]:
+    with open(Path(__file__).parent / file, "r") as puzzle_input:
         lines = puzzle_input.read().splitlines()
         program = list()
         for line in lines:
@@ -38,4 +41,10 @@ def _parse_program_file(file: os.path) -> list[tuple[int, int]]:
         return program
 
 
-helpers.print_timed_results(solution_func=print_pixels_on_screen)
+# helpers.print_timed_results(solution_func=print_pixels_on_screen)
+start = time.perf_counter()
+print_pixels_on_screen("eg.txt")
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print_pixels_on_screen("input.txt")
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

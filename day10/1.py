@@ -1,9 +1,8 @@
-import os
+import pathlib
+import time
 
-import helpers
 
-
-def calculate_signal_strength(file_path: os.path) -> int:
+def calculate_signal_strength(file_path: str) -> int:
     program = _parse_program_file(file=file_path)
     cycle_count = 0
     register = 1
@@ -26,8 +25,8 @@ def calculate_signal_strength(file_path: os.path) -> int:
     return sum(signal_strengths)
 
 
-def _parse_program_file(file: os.path) -> list[tuple[int, int]]:
-    with open(file) as puzzle_input:
+def _parse_program_file(file: str) -> list[tuple[int, int]]:
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         lines = puzzle_input.read().splitlines()
         program = list()
         for line in lines:
@@ -38,4 +37,9 @@ def _parse_program_file(file: os.path) -> list[tuple[int, int]]:
         return program
 
 
-helpers.print_timed_results(solution_func=calculate_signal_strength)
+start = time.perf_counter()
+print(calculate_signal_strength("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(calculate_signal_strength("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
