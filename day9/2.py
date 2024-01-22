@@ -1,8 +1,7 @@
 import math
-import os
+import pathlib
+import time
 from typing import Self
-
-import helpers
 
 
 class Head:
@@ -77,6 +76,7 @@ class Tail(Head):
                 else:
                     self.x -= 1
                     self.y -= 1
+        # The problem seems to be here
         elif is_diagonal_move:
             if abs(tail.y - self.y) == 1:
                 if tail.x - self.x == 2:
@@ -100,7 +100,7 @@ class Tail(Head):
                 self.y = tail.y - 1
 
 
-def count_tail_positions(file_path: os.path) -> int:
+def count_tail_positions(file_path: str) -> int:
     instructions = _get_instructions(file=file_path)
     head = Head(x=0, y=0)
     tail_1 = Tail(x=0, y=0)
@@ -141,8 +141,8 @@ def count_tail_positions(file_path: os.path) -> int:
     return len(positions)
 
 
-def _get_instructions(file: os.path) -> list[tuple[str, int]]:
-    with open(file) as puzzle_input:
+def _get_instructions(file: str) -> list[tuple[str, int]]:
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         lines = puzzle_input.read().splitlines()
         instructions = list()
         for line in lines:
@@ -151,7 +151,12 @@ def _get_instructions(file: os.path) -> list[tuple[str, int]]:
         return instructions
 
 
-helpers.print_timed_results(solution_func=count_tail_positions)
-helpers.print_timed_results(
-    solution_func=count_tail_positions, test_path_extension="eg1.txt"
-)
+# start = time.perf_counter()
+# print(count_tail_positions("eg.txt"))
+# print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(count_tail_positions("eg1.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(count_tail_positions("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
