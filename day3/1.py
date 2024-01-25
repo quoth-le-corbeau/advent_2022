@@ -1,10 +1,9 @@
-import os
+import time
+import pathlib
 
-import helpers
 
-
-def sum_item_priorities(file_path: os.path) -> int:
-    all_compartments = _get_compartments(file=file_path)
+def sum_item_priorities(file: str) -> int:
+    all_compartments = _get_compartments(file=file)
     elf_items = list()
     for compartments in all_compartments:
         first, second = set(compartments[0]), set(compartments[1])
@@ -22,8 +21,8 @@ def _get_item_priority(item: str) -> int:
         return (ord(item) - 64) + 26
 
 
-def _get_compartments(file: os.path):
-    with open(file) as puzzle_input:
+def _get_compartments(file: str):
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         rucksacks = puzzle_input.read().splitlines()
         all_compartments = list()
         for rucksack in rucksacks:
@@ -36,4 +35,9 @@ def _get_compartments(file: os.path):
         return all_compartments
 
 
-helpers.print_timed_results(solution_func=sum_item_priorities)
+start = time.perf_counter()
+print(sum_item_priorities("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(sum_item_priorities("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

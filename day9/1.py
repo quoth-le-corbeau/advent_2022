@@ -1,14 +1,15 @@
+import pathlib
+import time
 import math
-import os
-import helpers
 
 
 class Head:
-    def __init__(self, x: int, y: int):
+    def __init__(self, x: int = 0, y: int = 0):
         self.x = x
         self.y = y
 
-    def move(self, direction: str):
+    def move_and_store_last_position(self, direction: str) -> tuple[int, int]:
+        last_position = self.x, self.y
         if direction == "U":
             self.y += 1
         elif direction == "D":
@@ -17,6 +18,7 @@ class Head:
             self.x += 1
         elif direction == "L":
             self.x -= 1
+        return last_position
 
 
 class Tail(Head):
@@ -29,52 +31,26 @@ class Tail(Head):
         vertical_distance = abs(self.y - head.y)
         return math.sqrt(horizontal_distance**2 + vertical_distance**2)
 
-    def follow_head(self, head: Head):
-        is_diagonal_move = (
-            abs(self.y - head.y) == 2 and abs(self.x - head.x) == 1
-        ) or (abs(self.y - head.y) == 1 and abs(self.x - head.x)) == 2
-        if is_diagonal_move:
-            if abs(head.y - self.y) == 1:
-                if head.x - self.x == 2:
-                    self.x, self.y = head.x - 1, head.y
-                elif head.x - self.x == -2:
-                    self.x, self.y = head.x + 1, head.y
-            elif abs(head.x - self.x) == 1:
-                if head.y - self.y == 2:
-                    self.x, self.y = head.x, head.y - 1
-                elif head.y - self.y == -2:
-                    self.x, self.y = head.x, head.y + 1
-        elif self.y == head.y:
-            if self.x > head.x:
-                self.x = head.x + 1
-            else:
-                self.x = head.x - 1
-        else:
-            if self.y > head.y:
-                self.y = head.y + 1
-            else:
-                self.y = head.y - 1
 
-
-def count_tail_positions(file_path: os.path) -> int:
+def count_tail_positions(file_path: str) -> int:
     instructions = _get_instructions(file=file_path)
-    head = Head(x=0, y=0)
-    tail = Tail(x=0, y=0)
+    head = Head()
+    tail = Tail()
     positions: set[tuple[int, int]] = {(tail.x, tail.y)}
     for instruction in instructions:
         spaces = 0
         direction = instruction[0]
         while spaces < instruction[1]:
-            head.move(direction=direction)
+            last_head_position = head.move_and_store_last_position(direction=direction)
             if tail.has_to_move(head):
-                tail.follow_head(head)
+                tail.x, tail.y = last_head_position
                 positions.add((tail.x, tail.y))
             spaces += 1
     return len(positions)
 
 
-def _get_instructions(file: os.path) -> list[tuple[str, int]]:
-    with open(file) as puzzle_input:
+def _get_instructions(file: str) -> list[tuple[str, int]]:
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         lines = puzzle_input.read().splitlines()
         instructions = list()
         for line in lines:
@@ -83,4 +59,9 @@ def _get_instructions(file: os.path) -> list[tuple[str, int]]:
         return instructions
 
 
-helpers.print_timed_results(solution_func=count_tail_positions)
+start = time.perf_counter()
+print(count_tail_positions("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(count_tail_positions("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

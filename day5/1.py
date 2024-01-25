@@ -1,12 +1,11 @@
 import collections
-import os
+import time
+import pathlib
 import re
 
-import helpers
 
-
-def stack_crates(file_path: os.path):
-    stacks, instructions = _get_stacks_and_instructions(file=file_path)
+def stack_crates_9000(file: str):
+    stacks, instructions = _get_stacks_and_instructions(file=file)
     new_stacks = _apply_instructions_to_stacks(stacks=stacks, instructions=instructions)
     top_crates = ""
     for _, value in new_stacks.items():
@@ -27,9 +26,9 @@ def _apply_instructions_to_stacks(
 
 
 def _get_stacks_and_instructions(
-    file: os.path,
+    file: str,
 ) -> tuple[dict[str, list[str]], list[list[int]]]:
-    with open(file) as puzzle_input:
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         blocks = puzzle_input.read().split("\n\n")
         crate_block, instructions_block = blocks[0], blocks[1]
         crate_block = crate_block.split("\n")[:-1]
@@ -57,4 +56,9 @@ def _get_stacks_and_instructions(
     return stacks_ordered_by_number, numbered_instructions
 
 
-helpers.print_timed_results(solution_func=stack_crates)
+start = time.perf_counter()
+print(stack_crates_9000("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(stack_crates_9000("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

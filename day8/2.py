@@ -1,10 +1,9 @@
-import os
+import pathlib
+import time
 
-import helpers
 
-
-def find_most_scenic_tree(file_path: os.path):
-    grid = _get_tree_height_grid(file=file_path)
+def find_most_scenic_tree(file: str) -> int:
+    grid = _get_tree_height_grid(file=file)
     return find_highest_scenic_score(grid=grid)
 
 
@@ -52,8 +51,8 @@ def find_highest_scenic_score(grid: list[list[int]]) -> int:
     return max(scenic_scores)
 
 
-def _get_tree_height_grid(file: os.path) -> list[list[int]]:
-    with open(file) as puzzle_input:
+def _get_tree_height_grid(file: str) -> list[list[int]]:
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         lines = puzzle_input.read().split("\n")
         grid = list()
         for line in lines:
@@ -67,4 +66,9 @@ def _get_tree_height_grid(file: os.path) -> list[list[int]]:
         return grid
 
 
-helpers.print_timed_results(solution_func=find_most_scenic_tree)
+start = time.perf_counter()
+print(find_most_scenic_tree("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(find_most_scenic_tree("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

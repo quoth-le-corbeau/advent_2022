@@ -1,17 +1,16 @@
-import os
+import time
+import pathlib
 
-import helpers
 
-
-def find_most_calories(file_path: os.path):
+def find_top_three_most_calories(file: str):
     top_three_elves = [
-        _get_all_elf_calories(file=file_path)[i] for i in range(-1, -4, -1)
+        _get_all_elf_calories(file=file)[i] for i in range(-1, -4, -1)
     ]
     return sum(top_three_elves)
 
 
-def _get_all_elf_calories(file: os.path) -> list[int]:
-    with open(file) as puzzle_input:
+def _get_all_elf_calories(file: str) -> list[int]:
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         calories_per_elf = puzzle_input.read().split("\n\n")
         total_calories_per_elf = list()
         for elf in calories_per_elf:
@@ -20,4 +19,9 @@ def _get_all_elf_calories(file: os.path) -> list[int]:
     return sorted(total_calories_per_elf)
 
 
-helpers.print_timed_results(solution_func=find_most_calories)
+start = time.perf_counter()
+print(find_top_three_most_calories("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(find_top_three_most_calories("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

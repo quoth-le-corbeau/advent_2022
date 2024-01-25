@@ -3,11 +3,8 @@ import time
 from pathlib import Path
 
 
-# import helpers
-
-
-def print_pixels_on_screen(file_path: os.path) -> None:
-    program = _parse_program_file(file=file_path)
+def print_pixels_on_screen(file: str) -> None:
+    program = _parse_program_file(file=file)
     sprite_position = [0, 1, 2]
     register = 1
     cycle_count = 0
@@ -41,7 +38,6 @@ def _parse_program_file(file: str) -> list[tuple[int, int]]:
         return program
 
 
-# helpers.print_timed_results(solution_func=print_pixels_on_screen)
 start = time.perf_counter()
 print_pixels_on_screen("eg.txt")
 print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

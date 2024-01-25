@@ -1,11 +1,10 @@
-import os
+import time
 import re
+import pathlib
 
-import helpers
 
-
-def find_fully_contained_ranges(file_path: os.path):
-    range_pairs = _get_range_pairs(file=file_path)
+def find_fully_contained_ranges(file: str) -> int:
+    range_pairs = _get_range_pairs(file=file)
     fully_contained_count = 0
     for pair in range_pairs:
         range_1_start, range_1_end = pair[0][0], pair[0][1]
@@ -17,8 +16,8 @@ def find_fully_contained_ranges(file_path: os.path):
     return fully_contained_count
 
 
-def _get_range_pairs(file: os.path) -> list[tuple[tuple[int, int], tuple[int, int]]]:
-    with open(file) as puzzle_input:
+def _get_range_pairs(file: str) -> list[tuple[tuple[int, int], tuple[int, int]]]:
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         lines = puzzle_input.read().splitlines()
         range_pairs: list[tuple[tuple[int, int], tuple[int, int]]] = list()
         for line in lines:
@@ -32,4 +31,9 @@ def _get_range_pairs(file: os.path) -> list[tuple[tuple[int, int], tuple[int, in
         return range_pairs
 
 
-helpers.print_timed_results(solution_func=find_fully_contained_ranges)
+start = time.perf_counter()
+print(find_fully_contained_ranges("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(find_fully_contained_ranges("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

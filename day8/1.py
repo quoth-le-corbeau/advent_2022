@@ -1,9 +1,8 @@
-import os
+import pathlib
+import time
 
-import helpers
 
-
-def count_visible_trees(file_path: os.path):
+def count_visible_trees(file_path: str) -> int:
     grid = _get_tree_height_grid(file=file_path)
     return _count_visible_trees_in_grid(grid=grid)
 
@@ -30,8 +29,8 @@ def _count_visible_trees_in_grid(grid: list[list[int]]) -> int:
     return visible_tree_count
 
 
-def _get_tree_height_grid(file: os.path) -> list[list[int]]:
-    with open(file) as puzzle_input:
+def _get_tree_height_grid(file: str) -> list[list[int]]:
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         lines = puzzle_input.read().split("\n")
         grid = list()
         for line in lines:
@@ -45,4 +44,9 @@ def _get_tree_height_grid(file: os.path) -> list[list[int]]:
         return grid
 
 
-helpers.print_timed_results(solution_func=count_visible_trees)
+start = time.perf_counter()
+print(count_visible_trees("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(count_visible_trees("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

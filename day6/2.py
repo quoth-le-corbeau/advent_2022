@@ -1,10 +1,9 @@
-import os
+import time
+import pathlib
 
-import helpers
 
-
-def count_characters_until_marker_detected(file_path: os.path) -> int:
-    data_stream = _get_data_stream(file=file_path)
+def count_characters_until_marker_detected_2(file: str) -> int:
+    data_stream = _get_data_stream(file=file)
     count = 0
     for i in range(14, len(data_stream), 1):
         last_four_characters = ""
@@ -16,9 +15,14 @@ def count_characters_until_marker_detected(file_path: os.path) -> int:
     return count
 
 
-def _get_data_stream(file: os.path) -> str:
-    with open(file) as puzzle_input:
+def _get_data_stream(file: str) -> str:
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         return puzzle_input.read()
 
 
-helpers.print_timed_results(solution_func=count_characters_until_marker_detected)
+start = time.perf_counter()
+print(count_characters_until_marker_detected_2("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(count_characters_until_marker_detected_2("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

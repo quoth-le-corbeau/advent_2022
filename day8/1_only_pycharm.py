@@ -1,11 +1,6 @@
 import os
-import sys
 
-# needed for running from terminal or in vscode
-sys.dont_write_bytecode = True
-sys.path.append(os.getcwd())
-
-from result_printer import print_timed_results
+import helpers
 
 
 def count_visible_trees(file_path: os.path):
@@ -50,4 +45,4 @@ def _get_tree_height_grid(file: os.path) -> list[list[int]]:
         return grid
 
 
-print_timed_results(day_number="8", solution_func=count_visible_trees)
+helpers.print_timed_results(solution_func=count_visible_trees)

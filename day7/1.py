@@ -1,12 +1,13 @@
-import os
-import helpers
+import time
+import pathlib
+
 
 TARGET_DIRECTORY_SIZE = 100000
 TARGET_DIRECTORIES = list()
 
 
-def sum_target_directories(file_path: os.path) -> int:
-    file_structure = _build_nested_file_structure(file=file_path)
+def sum_target_directories(file: str) -> int:
+    file_structure = _build_nested_file_structure(file=file)
     root_dir_size = 0
     for _, value in file_structure.items():
         if isinstance(value, int):
@@ -39,8 +40,8 @@ def _recursive_sum_of_nested_dicts(nested_dict) -> int:
     return sum_of_integers_in_outer_dict
 
 
-def _build_nested_file_structure(file: os.path):
-    with open(file) as puzzle_input:
+def _build_nested_file_structure(file: str):
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         lines = puzzle_input.read().splitlines()
         current_dir = dict()
         stack = list()
@@ -68,6 +69,9 @@ def _build_nested_file_structure(file: os.path):
         return stack[0]
 
 
-helpers.print_timed_results(
-    solution_func=sum_target_directories, test_path_extension=None
-)
+start = time.perf_counter()
+print(sum_target_directories("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(sum_target_directories("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

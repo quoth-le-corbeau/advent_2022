@@ -1,14 +1,13 @@
-import os
-
-import helpers
-
-
-def find_most_calories(file_path: os.path):
-    return max(_get_all_elf_calories(file=file_path))
+import time
+import pathlib
 
 
-def _get_all_elf_calories(file: os.path) -> list[int]:
-    with open(file) as puzzle_input:
+def find_most_calories(file: str):
+    return max(_get_all_elf_calories(file=file))
+
+
+def _get_all_elf_calories(file: str) -> list[int]:
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         calories_per_elf = puzzle_input.read().split("\n\n")
         total_calories_per_elf = list()
         for elf in calories_per_elf:
@@ -17,4 +16,9 @@ def _get_all_elf_calories(file: os.path) -> list[int]:
     return total_calories_per_elf
 
 
-helpers.print_timed_results(solution_func=find_most_calories)
+start = time.perf_counter()
+print(find_most_calories("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(find_most_calories("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")

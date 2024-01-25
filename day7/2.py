@@ -1,5 +1,6 @@
-import os
-import helpers
+import time
+import pathlib
+
 
 DISK_SIZE = 70000000
 SPACE_NEEDED = 30000000
@@ -7,8 +8,8 @@ SPACE_NEEDED = 30000000
 ALL_DIRECTORY_SIZES = list()
 
 
-def find_smallest_directory_to_delete(file_path: os.path) -> int:
-    file_structure = _build_nested_file_structure(file=file_path)
+def find_smallest_directory_to_delete(file: str) -> int:
+    file_structure = _build_nested_file_structure(file=file)
     _get_all_directory_sizes(file_structure)
     potentially_deletable_directories = list()
     current_free_space = DISK_SIZE - ALL_DIRECTORY_SIZES[-1]
@@ -47,8 +48,8 @@ def _recursive_sum_of_nested_dicts(nested_dict) -> int:
     return sum_of_integers_in_outer_dict
 
 
-def _build_nested_file_structure(file: os.path):
-    with open(file) as puzzle_input:
+def _build_nested_file_structure(file: str):
+    with open(pathlib.Path(__file__).parent / file, "r") as puzzle_input:
         lines = puzzle_input.read().splitlines()
         current_dir = dict()
         stack = list()
@@ -76,6 +77,9 @@ def _build_nested_file_structure(file: os.path):
         return stack[0]
 
 
-helpers.print_timed_results(
-    solution_func=find_smallest_directory_to_delete, test_path_extension=None
-)
+start = time.perf_counter()
+print(find_smallest_directory_to_delete("eg.txt"))
+print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
+start = time.perf_counter()
+print(find_smallest_directory_to_delete("input.txt"))
+print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
