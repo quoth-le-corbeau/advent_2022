@@ -16,6 +16,7 @@ def calculate_monkey_business_over_20_rounds(file: str) -> int:
     inspections_asc = sorted(inspections)
     return inspections_asc[-1] * inspections_asc[-2]
 
+
 def _monkey_round(
     monkeys: list[dict[str, Union[list[int], str, int, tuple[int, int]]]]
 ) -> list[dict[str, Union[list[int], str, int, tuple[int, int]]]]:
