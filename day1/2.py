@@ -3,9 +3,7 @@ import pathlib
 
 
 def find_top_three_most_calories(file: str):
-    top_three_elves = [
-        _get_all_elf_calories(file=file)[i] for i in range(-1, -4, -1)
-    ]
+    top_three_elves = [_get_all_elf_calories(file=file)[i] for i in range(-1, -4, -1)]
     return sum(top_three_elves)
 
 

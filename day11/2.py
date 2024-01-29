@@ -4,10 +4,10 @@ import re
 from typing import Union
 
 
-def calculate_monkey_business_over_1000_rounds(file: str) -> int:
+def calculate_monkey_business_over_10000_rounds(file: str) -> int:
     monkeys = _get_attributes_per_monkey(file=file)
     i = 0
-    while i < 20:
+    while i < 10000:
         monkeys = _monkey_round(monkeys=monkeys)
         i += 1
     inspections = list()
@@ -26,7 +26,7 @@ def _monkey_round(
         divisor = monkey["divisor"]
         targets = monkey["targets"]
         for item in monkey["items"]:
-            worry_level = item
+            worry_level = item % divisor
             if operation_type == "*":
                 if operand != "old":
                     worry_level *= int(operand)
@@ -37,7 +37,7 @@ def _monkey_round(
                     worry_level += int(operand)
                 else:
                     worry_level += worry_level
-            if worry_level % divisor == 0:
+            if worry_level == 0:
                 monkeys[targets[0]]["items"].append(worry_level)
             else:
                 monkeys[targets[1]]["items"].append(worry_level)
@@ -67,8 +67,8 @@ def _get_attributes_per_monkey(
 
 
 start = time.perf_counter()
-print(calculate_monkey_business_over_1000_rounds("eg.txt"))
+print(calculate_monkey_business_over_10000_rounds("eg.txt"))
 print(f"TEST -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
 start = time.perf_counter()
-print(calculate_monkey_business_over_1000_rounds("input.txt"))
+print(calculate_monkey_business_over_10000_rounds("input.txt"))
 print(f"REAL -> Elapsed {time.perf_counter() - start:2.4f} seconds.")
