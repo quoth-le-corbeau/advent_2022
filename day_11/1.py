@@ -26,17 +26,9 @@ def _monkey_round(
         divisor = monkey["divisor"]
         targets = monkey["targets"]
         for item in monkey["items"]:
-            worry_level = item
-            if operation_type == "*":
-                if operand != "old":
-                    worry_level *= int(operand)
-                else:
-                    worry_level *= worry_level
-            else:
-                if operand != "old":
-                    worry_level += int(operand)
-                else:
-                    worry_level += worry_level
+            worry_level = _perform_operation(
+                item=item, operand=operand, operation_type=operation_type
+            )
             worry_level = worry_level // 3
             if worry_level % divisor == 0:
                 monkeys[targets[0]]["items"].append(worry_level)
@@ -45,6 +37,21 @@ def _monkey_round(
             monkey["inspection_count"] += 1
         monkey["items"] = []
     return monkeys
+
+
+def _perform_operation(item: int, operand: str, operation_type: str) -> int:
+    worry_level = item
+    if operation_type == "*":
+        if operand != "old":
+            worry_level *= int(operand)
+        else:
+            worry_level *= worry_level
+    else:
+        if operand != "old":
+            worry_level += int(operand)
+        else:
+            worry_level += worry_level
+    return worry_level
 
 
 def _get_attributes_per_monkey(
