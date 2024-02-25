@@ -44,13 +44,13 @@ class AStar:
         x, y = node.position
         potential_neighbour_positions = [(x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)]
         neighbours = dict()
-        for neighbour_position in potential_neighbour_positions:
+        for potential_neighbour_position in potential_neighbour_positions:
             if (
-                0 <= neighbour_position[0] < self.width
-                and 0 <= neighbour_position[1] < self.height
+                0 <= potential_neighbour_position[0] < self.width
+                and 0 <= potential_neighbour_position[1] < self.height
             ):
-                neighbours[neighbour_position] = self.get_grid_value(
-                    position=neighbour_position
+                neighbours[potential_neighbour_position] = self.get_grid_value(
+                    position=potential_neighbour_position
                 )
         return neighbours
 
@@ -68,13 +68,12 @@ class AStar:
 
     @staticmethod
     def neighbour_is_not_wall(current_letter: str, neighbour_letter: str) -> bool:
-        return (
-            current_letter not in ["S", "E"]
-            and neighbour_letter not in ["S", "E"]
-            and abs(ord(current_letter) - ord(neighbour_letter)) < 2
-        )
+        if current_letter not in ["S", "E"]:
+            return abs(ord(current_letter) - ord(neighbour_letter)) < 2
+        else:
+            return True
 
-    def compute_path(self, end_node: Node) -> None:
+    def compute_path(self, end_node: Node) -> list[tuple[int, int]]:
         open_list = list()
         closed_list = list()
         node_dict = dict()
@@ -91,24 +90,22 @@ class AStar:
             else:
                 closed_list.append(current_node)
                 neighbours: list[Node] = list()
-                # got up to here
-                for node_to_check, letter in self.node_neighbours(
-                    current_node.position
-                ).values():
+                node_neighbours_dict = self.node_neighbours(node=current_node)
+                for coordinate_to_check, letter in node_neighbours_dict.items():
                     if (
-                        node_to_check not in node_dict.keys()
+                        coordinate_to_check not in node_dict.keys()
                         and self.neighbour_is_not_wall(
                             current_letter=self.get_grid_value(
-                                position=current_node.postition
+                                position=current_node.position
                             ),
                             neighbour_letter=letter,
                         )
                     ):
-                        node_dict[node_to_check] = Node(node_to_check)
-                        neighbours.append(node_dict[node_to_check])
+                        node_dict[coordinate_to_check] = Node(coordinate_to_check)
+                        neighbours.append(node_dict[coordinate_to_check])
 
                 for neighbour in neighbours:
-                    new_g_score = current_node.gscore + 1
+                    new_g_score = current_node.g_score + 1
                     if neighbour in open_list and new_g_score < neighbour.g_score:
                         open_list.remove(neighbour)
                     if new_g_score < neighbour.g_score and neighbour in closed_list:
@@ -117,9 +114,9 @@ class AStar:
                         neighbour.g_score = new_g_score
                         neighbour.f_score = (
                             neighbour.g_score
-                            + self.heuristic_manhattan(end_node=neighbour.position)
+                            + self.heuristic_manhattan(end_node=neighbour)
                         )
                         neighbour.parent = current_node
                         heapq.heappush(open_list, neighbour)
                     heapq.heapify(open_list)
-        return None
+        return self.get_path(current_node)
